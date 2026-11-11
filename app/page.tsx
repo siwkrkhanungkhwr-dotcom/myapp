@@ -1,812 +1,579 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-Search,
-Bell,
-ChevronDown,
-SlidersHorizontal,
-Headphones,
-Watch,
-Speaker,
-Laptop,
-Star,
-Home,
-Compass,
-ShoppingBag,
-User,
-ArrowLeft,
-Share2,
-Heart,
-Check,
-Bluetooth,
-BatteryCharging,
-ShieldCheck,
-Truck,
-Trash2,
-Ticket,
-CheckCircle2,
-ArrowRight,
-Wifi,
-Battery,
-Grid,
-Smartphone,
-Info,
+import { 
+  Search, ShoppingCart, Heart, User, ArrowLeft, Star, 
+  Plus, Minus, CheckCircle, CreditCard, ChevronRight, Home, 
+  Grid, Bell, Sliders, Truck, ShieldCheck 
 } from "lucide-react";
 
-export default function AppPrototypePage() {
-const [activeViewMode, setActiveViewMode] = useState<"grid" | "single">("grid");
-const [activeSingleScreen, setActiveSingleScreen] = useState(1);
-const [showAnnotations, setShowAnnotations] = useState(true);
-const [zoomLevel, setZoomLevel] = useState(1);
+// Mock Data
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "หูฟังบลูทูธไร้สาย Pro Sound",
+    category: "หูฟัง & แอคเซสเซอรี",
+    price: 1590,
+    originalPrice: 2590,
+    rating: 4.8,
+    reviews: 124,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80",
+    description: "สัมผัสประสบการณ์เสียงคมชัดระดับพรีเมียม พร้อมระบบตัดเสียงรบกวน Active Noise Cancelling (ANC) แบตเตอรี่ใช้งานได้นานสูงสุด 30 ชั่วโมง",
+    colors: ["#1F2937", "#F3F4F6", "#3B82F6"]
+  },
+  {
+    id: 2,
+    name: "นาฬิกาอัจฉริยะ Smart Watch Ultra",
+    category: "อุปกรณ์สวมใส่",
+    price: 3290,
+    originalPrice: 4500,
+    rating: 4.9,
+    reviews: 98,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
+    description: "ติดตามสุขภาพและการออกกำลังกายของคุณตลอด 24 ชั่วโมง วัดอัตราการเต้นของหัวใจ และรองรับโหมดออกกำลังกายมากกว่า 50 โหมด",
+    colors: ["#000000", "#EF4444", "#10B981"]
+  },
+  {
+    id: 3,
+    name: "ลำโพงบลูทูธพกพา Mini Bass",
+    category: "เครื่องเสียง",
+    price: 890,
+    originalPrice: 1290,
+    rating: 4.6,
+    reviews: 76,
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&q=80",
+    description: "เบสหนักแน่น ขนาดเล็กพกพาสะดวก พร้อมมาตรฐานกันน้ำ IPX7",
+    colors: ["#1E40AF", "#DC2626"]
+  }
+];
 
-const navigateTo = (screenNum: number) => {
-if (activeViewMode === "single") {
-setActiveSingleScreen(screenNum);
-} else {
-const target = document.getElementById(screen-container-${screenNum});
-if (target) {
-target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-}
-}
-};
+export default function AppPrototype() {
+  const [activeScreen, setActiveScreen] = useState<number>(1);
+  const [selectedProduct, setSelectedProduct] = useState(PRODUCTS[0]);
+  const [cartCount, setCartCount] = useState<number>(1);
+  const [viewMode, setViewMode] = useState<"grid" | "single">("grid");
 
-const handleZoom = (delta: number) => {
-setZoomLevel((prev) => Math.min(Math.max(0.5, prev + delta), 1.4));
-};
+  const handleScreenSwitch = (screenNum: number) => {
+    setActiveScreen(screenNum);
+    if (viewMode === "grid") {
+      const target = document.getElementById(`screen-container-${screenNum}`);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+    }
+  };
 
-return (
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
+      {/* Top Header & Controls */}
+      <header className="max-w-7xl mx-auto mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-xl backdrop-blur">
+        <div>
+          <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-amber-400">
+            Next.js App Prototype
+          </h1>
+          <p className="text-xs text-slate-400">ขนาดหน้าจอ 390 x 882px (4 Screens Mobile UX Mockup)</p>
+        </div>
 
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setViewMode(viewMode === "grid" ? "single" : "grid")}
+            className="px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 transition shadow"
+          >
+            {viewMode === "grid" ? "แสดงทีละหน้า (Focused View)" : "แสดง 4 หน้าพร้อมกัน (Grid View)"}
+          </button>
+        </div>
+      </header>
 
-    <div className="flex items-center space-x-3 mt-3 sm:mt-0">
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-1 flex items-center text-xs">
-        <button
-          onClick={() => setActiveViewMode("grid")}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeViewMode === "grid"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-white"
-          }`}
-        >
-          <Grid className="w-3.5 h-3.5" /> แสดงครบ 4 หน้าจอ
-        </button>
-        <button
-          onClick={() => setActiveViewMode("single")}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeViewMode === "single"
-              ? "bg-indigo-600 text-white shadow-sm"
-              : "text-slate-400 hover:text-white"
-          }`}
-        >
-          <Smartphone className="w-3.5 h-3.5" /> ดูทีละหน้าจอ
-        </button>
+      {/* Navigation Switcher for Mobile Prototype */}
+      <div className="max-w-7xl mx-auto mb-8 flex flex-wrap justify-center gap-2">
+        {[
+          { id: 1, label: "1. หน้าแรก (Home)" },
+          { id: 2, label: "2. รายละเอียดสินค้า (Product)" },
+          { id: 3, label: "3. ตะกร้า & ชำระเงิน (Cart)" },
+          { id: 4, label: "4. ชำระเงินสำเร็จ (Success)" },
+        ].map((screen) => (
+          <button
+            key={screen.id}
+            onClick={() => handleScreenSwitch(screen.id)}
+            className={`px-4 py-2 rounded-xl text-xs font-medium transition ${
+              activeScreen === screen.id
+                ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20"
+                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+            }`}
+          >
+            {screen.label}
+          </button>
+        ))}
       </div>
 
-      <button
-        onClick={() => setShowAnnotations(!showAnnotations)}
-        className="px-3 py-1.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl font-medium flex items-center gap-1.5 transition"
+      {/* Main Screen Container */}
+      <div
+        className={
+          viewMode === "grid"
+            ? "max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center"
+            : "max-w-md mx-auto flex justify-center"
+        }
       >
-        <Info className="w-3.5 h-3.5 text-indigo-400" />
-        <span>{showAnnotations ? "ซ่อน UX Annotations" : "แสดง UX Annotations"}</span>
-      </button>
+        {/* Screen 1: Home / Discovery */}
+        {(viewMode === "grid" || activeScreen === 1) && (
+          <div id="screen-container-1" className="scroll-mt-6">
+            <ScreenFrame title="1. หน้าแรก (Home)">
+              <ScreenHome 
+                onSelectProduct={(p) => {
+                  setSelectedProduct(p);
+                  handleScreenSwitch(2);
+                }}
+              />
+            </ScreenFrame>
+          </div>
+        )}
 
-      <div className="bg-slate-800 border border-slate-700 rounded-xl flex items-center text-xs overflow-hidden">
-        <button
-          onClick={() => handleZoom(-0.1)}
-          className="px-2.5 py-1.5 text-slate-300 hover:bg-slate-700 border-r border-slate-700"
-        >
-          -
-        </button>
-        <span className="px-2 text-slate-300 font-mono">
-          {Math.round(zoomLevel * 100)}%
-        </span>
-        <button
-          onClick={() => handleZoom(0.1)}
-          className="px-2.5 py-1.5 text-slate-300 hover:bg-slate-700 border-l border-slate-700"
-        >
-          +
-        </button>
+        {/* Screen 2: Product Detail */}
+        {(viewMode === "grid" || activeScreen === 2) && (
+          <div id="screen-container-2" className="scroll-mt-6">
+            <ScreenFrame title="2. รายละเอียดสินค้า (Detail)">
+              <ScreenDetail 
+                product={selectedProduct} 
+                onAddToCart={() => {
+                  setCartCount(prev => prev + 1);
+                  handleScreenSwitch(3);
+                }} 
+              />
+            </ScreenFrame>
+          </div>
+        )}
+
+        {/* Screen 3: Cart & Checkout */}
+        {(viewMode === "grid" || activeScreen === 3) && (
+          <div id="screen-container-3" className="scroll-mt-6">
+            <ScreenFrame title="3. ตะกร้า & ชำระเงิน (Cart)">
+              <ScreenCart 
+                product={selectedProduct} 
+                count={cartCount}
+                setCount={setCartCount}
+                onCheckout={() => handleScreenSwitch(4)}
+              />
+            </ScreenFrame>
+          </div>
+        )}
+
+        {/* Screen 4: Order Success */}
+        {(viewMode === "grid" || activeScreen === 4) && (
+          <div id="screen-container-4" className="scroll-mt-6">
+            <ScreenFrame title="4. สั่งซื้อสำเร็จ (Success)">
+              <ScreenSuccess onBackHome={() => handleScreenSwitch(1)} />
+            </ScreenFrame>
+          </div>
+        )}
       </div>
     </div>
-  </header>
+  );
+}
 
-  {/* Single Screen Tabs Navigation */}
-  {activeViewMode === "single" && (
-    <div className="bg-slate-900 border-b border-slate-800 px-6 py-2.5 flex justify-center gap-2 text-xs">
-      {[
-        { id: 1, label: "1. หน้าแรก (Home)" },
-        { id: 2, label: "2. รายละเอียดสินค้า" },
-        { id: 3, label: "3. ตะกร้า & ชำระเงิน" },
-        { id: 4, label: "4. สั่งซื้อสำเร็จ" },
-      ].map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => setActiveSingleScreen(tab.id)}
-          className={`px-4 py-1.5 rounded-full font-medium transition ${
-            activeSingleScreen === tab.id
-              ? "bg-indigo-600 text-white shadow"
-              : "bg-slate-800 text-slate-400 hover:text-white"
-          }`}
-        >
-          {tab.label}
-        </button>
-      ))}
+// Phone Shell Component (390 x 882 px)
+function ScreenFrame({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col items-center">
+      <span className="mb-2 text-xs font-semibold text-slate-400 tracking-wider">{title}</span>
+      <div 
+        className="w-[390px] h-[882px] bg-white text-slate-900 rounded-[48px] shadow-2xl border-[10px] border-slate-800 relative overflow-hidden flex flex-col select-none"
+      >
+        {/* Top Notch / Dynamic Island Header */}
+        <div className="w-full bg-slate-900 text-white px-6 pt-3 pb-2 flex justify-between items-center z-50">
+          <span className="text-xs font-semibold tracking-tight">09:41</span>
+          <div className="w-24 h-4 bg-black rounded-full flex items-center justify-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-slate-800"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-indigo-900/40 border border-indigo-500/40"></div>
+          </div>
+          <div className="flex items-center gap-1 text-[10px] font-bold">
+            <span>5G</span>
+            <div className="w-4 h-2 border border-white rounded-sm p-[0.5px]">
+              <div className="w-full h-full bg-white"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Screen Content Body */}
+        <div className="flex-1 overflow-y-auto bg-slate-50 flex flex-col relative">
+          {children}
+        </div>
+
+        {/* Home Bottom Indicator Bar */}
+        <div className="w-full h-6 bg-slate-50 flex justify-center items-center shrink-0">
+          <div className="w-32 h-1 bg-slate-300 rounded-full"></div>
+        </div>
+      </div>
     </div>
-  )}
+  );
+}
 
-  {/* Main Viewport Container */}
-  <main className="flex-1 overflow-auto p-8 flex justify-center items-start bg-slate-950">
-    <div
-      style={{ transform: `scale(${zoomLevel})` }}
-      className="transition-transform origin-top duration-200"
-    >
-      <div className="flex flex-row gap-8 flex-wrap justify-center items-start">
-        {/* SCREEN 1: HOME */}
-        {(activeViewMode === "grid" || activeSingleScreen === 1) && (
-          <div id="screen-container-1" className="flex flex-col items-center">
-            <div className="text-xs text-slate-300 font-medium mb-3 flex items-center gap-2">
-              <span className="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center font-bold text-[11px]">
-                1
-              </span>
-              <span>หน้า 1: หน้าแรก (Home / Discovery)</span>
-            </div>
-
-            <div className="w-[390px] h-[882px] min-w-[390px] min-h-[882px] bg-slate-50 border-[10px] border-slate-800 rounded-[46px] shadow-2xl relative overflow-hidden flex flex-col text-slate-900">
-              {/* Dynamic Notch & Status */}
-              <div className="w-full h-8 bg-slate-950 flex justify-between items-center px-6 pt-1 shrink-0 select-none z-30">
-                <span className="text-[11px] font-semibold text-white font-mono">09:41</span>
-                <div className="w-20 h-4 bg-black rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-slate-800 rounded-full mr-2"></div>
-                  <div className="w-2 h-2 bg-slate-700 rounded-full"></div>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <Wifi className="w-3 h-3 text-white" />
-                  <Battery className="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-
-              {/* Header */}
-              <div className="p-4 border-b border-slate-100 bg-white/90 backdrop-blur-md sticky top-0 z-20 shrink-0">
-                <div className="flex justify-between items-center mb-3">
-                  <div className="flex items-center space-x-2.5">
-                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-indigo-500 shadow-sm relative shrink-0">
-                      <img
-                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                        alt="Avatar"
-                        className="w-full h-full object-cover"
-                      />
-                      {showAnnotations && (
-                        <div className="absolute -top-1 -left-1 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                          1
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
-                        จัดส่งที่
-                      </div>
-                      <div className="text-xs font-bold text-slate-800 flex items-center gap-0.5">
-                        คอนโดสุขุมวิท 24, กทม. <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
-                      </div>
-                    </div>
-                  </div>
-                  <button className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center relative hover:bg-slate-200 transition">
-                    <Bell className="w-4 h-4 text-slate-700" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
-                  </button>
-                </div>
-
-                {/* Search */}
-                <div className="relative">
-                  <div className="w-full h-10 bg-slate-100 border border-slate-200 rounded-xl flex items-center px-3.5 text-slate-500 text-xs gap-2">
-                    <Search className="w-4 h-4 text-indigo-500" />
-                    <span className="text-slate-400">ค้นหาหูฟัง, สเปกเตอร์, Gadget...</span>
-                    <div className="ml-auto border-l border-slate-200 pl-2 text-slate-600">
-                      <SlidersHorizontal className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      2
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Scroll Area */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-5 bg-slate-50">
-                {/* Hero Banner */}
-                <div className="relative">
-                  <div className="w-full h-40 rounded-2xl overflow-hidden relative shadow-md">
-                    <img
-                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80"
-                      className="w-full h-full object-cover"
-                      alt="Banner"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/40 to-transparent p-4 flex flex-col justify-end">
-                      <span className="bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-md w-max mb-1">
-                        โปรเด็ดประจำสัปดาห์
-                      </span>
-                      <h3 className="text-white text-sm font-bold">เปิดตัว SoundPro Max Pro</h3>
-                      <p className="text-slate-200 text-[11px]">ลดสูงสุด 30% พร้อมส่งฟรีทั่วไทย</p>
-                    </div>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute top-2 right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      3
-                    </div>
-                  )}
-                </div>
-
-                {/* Categories */}
-                <div>
-                  <div className="flex justify-between items-center mb-2.5">
-                    <span class="text-xs font-bold text-slate-900">หมวดหมู่ยอดนิยม</span>
-                    <span className="text-[11px] text-indigo-600 font-semibold cursor-pointer">ดูทั้งหมด</span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-1">
-                        <Headphones className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] text-slate-700 font-medium">หูฟังไร้สาย</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mb-1">
-                        <Watch className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] text-slate-700 font-medium">สมาร์ทวอทช์</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-1">
-                        <Speaker className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] text-slate-700 font-medium">ลำโพงบลูทูธ</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-14 h-14 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 mb-1">
-                        <Laptop className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] text-slate-700 font-medium">อุปกรณ์เสริม</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Flash Sale Grid */}
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-900">สินค้าขายดี Flash Sale</span>
-                      <span className="bg-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">
-                        02:45:12
-                      </span>
-                    </div>
-                    <span className="text-[11px] text-indigo-600 font-semibold cursor-pointer">ดูทั้งหมด</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div
-                      onClick={() => navigateTo(2)}
-                      className="bg-white border border-slate-200/80 rounded-2xl p-2.5 shadow-sm hover:border-indigo-500 transition cursor-pointer relative"
-                    >
-                      <div className="w-full h-32 rounded-xl overflow-hidden mb-2 relative bg-slate-100">
-                        <img
-                          src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=80"
-                          className="w-full h-full object-cover"
-                          alt="Product"
-                        />
-                        <span className="absolute top-2 left-2 bg-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-                          -20%
-                        </span>
-                      </div>
-                      <div className="text-xs font-bold text-slate-900 truncate">Studio Wireless Headphones</div>
-                      <div className="text-[10px] text-slate-400 mb-1">ตัดเสียงรบกวน ANC</div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-indigo-600">฿6,990</span>
-                        <div className="flex items-center text-[10px] text-amber-500 font-semibold">
-                          <Star className="w-3 h-3 fill-amber-400 text-amber-400 mr-0.5" /> 4.8
-                        </div>
-                      </div>
-                      {showAnnotations && (
-                        <div className="absolute -bottom-1 -right-1 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                          4
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="bg-white border border-slate-200/80 rounded-2xl p-2.5 shadow-sm">
-                      <div className="w-full h-32 rounded-xl overflow-hidden mb-2 relative bg-slate-100">
-                        <img
-                          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&auto=format&fit=crop&q=80"
-                          className="w-full h-full object-cover"
-                          alt="Product 2"
-                        />
-                        <span className="absolute top-2 left-2 bg-indigo-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-                          NEW
-                        </span>
-                      </div>
-                      <div className="text-xs font-bold text-slate-900 truncate">Minimalist Smart Watch V2</div>
-                      <div className="text-[10px] text-slate-400 mb-1">วัดชีพจร & GPS</div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-indigo-600">฿8,490</span>
-                        <div className="flex items-center text-[10px] text-amber-500 font-semibold">
-                          <Star className="w-3 h-3 fill-amber-400 text-amber-400 mr-0.5" /> 4.9
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation Bar */}
-              <div className="h-16 border-t border-slate-200 bg-white px-6 flex justify-between items-center shrink-0">
-                <button className="flex flex-col items-center text-indigo-600 font-bold">
-                  <Home className="w-5 h-5" />
-                  <span className="text-[9px] mt-1">หน้าแรก</span>
-                </button>
-                <button className="flex flex-col items-center text-slate-400 hover:text-slate-800">
-                  <Compass className="w-5 h-5" />
-                  <span className="text-[9px] mt-1">ค้นหา</span>
-                </button>
-                <button
-                  onClick={() => navigateTo(3)}
-                  className="flex flex-col items-center text-slate-400 hover:text-slate-800 relative"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                  <span className="text-[9px] mt-1">ตะกร้า</span>
-                  <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center ring-2 ring-white">
-                    2
-                  </span>
-                </button>
-                <button className="flex flex-col items-center text-slate-400 hover:text-slate-800">
-                  <User className="w-5 h-5" />
-                  <span className="text-[9px] mt-1">โปรไฟล์</span>
-                </button>
-              </div>
-
-              {/* Home Indicator */}
-              <div className="w-full h-4 bg-white flex justify-center items-center shrink-0">
-                <div className="w-32 h-1 bg-slate-300 rounded-full"></div>
-              </div>
-            </div>
+// SCREEN 1: HOME
+function ScreenHome({ onSelectProduct }: { onSelectProduct: (p: typeof PRODUCTS[0]) => void }) {
+  return (
+    <div className="flex-1 flex flex-col">
+      <div className="p-4 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3">
+          <img 
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" 
+            alt="Profile" 
+            className="w-10 h-10 rounded-full object-cover border-2 border-indigo-600" 
+          />
+          <div>
+            <p className="text-[10px] text-slate-400 font-medium">ยินดีต้อนรับกลับ</p>
+            <p className="text-xs font-bold text-slate-800">คุณสมชาย ใจดี</p>
           </div>
-        )}
+        </div>
+        <div className="relative">
+          <Bell className="w-6 h-6 text-slate-600" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
+        </div>
+      </div>
 
-        {/* SCREEN 2: DETAILS */}
-        {(activeViewMode === "grid" || activeSingleScreen === 2) && (
-          <div id="screen-container-2" className="flex flex-col items-center">
-            <div className="text-xs text-slate-300 font-medium mb-3 flex items-center gap-2">
-              <span className="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center font-bold text-[11px]">
-                2
-              </span>
-              <span>หน้า 2: หน้ารายละเอียดสินค้า (Product Details)</span>
-            </div>
-
-            <div className="w-[390px] h-[882px] min-w-[390px] min-h-[882px] bg-slate-50 border-[10px] border-slate-800 rounded-[46px] shadow-2xl relative overflow-hidden flex flex-col text-slate-900">
-              <div className="w-full h-8 bg-slate-950 flex justify-between items-center px-6 pt-1 shrink-0 select-none z-30">
-                <span className="text-[11px] font-semibold text-white font-mono">09:42</span>
-                <div className="w-20 h-4 bg-black rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-slate-800 rounded-full mr-2"></div>
-                  <div className="w-2 h-2 bg-slate-700 rounded-full"></div>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <Wifi className="w-3 h-3 text-white" />
-                  <Battery className="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-
-              {/* Header */}
-              <div className="p-3 border-b border-slate-100 bg-white/90 backdrop-blur-md flex justify-between items-center sticky top-0 z-20 shrink-0">
-                <button
-                  onClick={() => navigateTo(1)}
-                  className="w-9 h-9 border border-slate-200 rounded-full flex items-center justify-center bg-white shadow-sm"
-                >
-                  <ArrowLeft className="w-4 h-4 text-slate-700" />
-                </button>
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  รายละเอียดสินค้า
-                </span>
-                <div className="flex items-center space-x-2">
-                  <button className="w-9 h-9 border border-slate-200 rounded-full flex items-center justify-center bg-white shadow-sm">
-                    <Share2 className="w-4 h-4 text-slate-700" />
-                  </button>
-                  <button className="w-9 h-9 border border-slate-200 rounded-full flex items-center justify-center bg-white shadow-sm">
-                    <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
-                <div className="relative">
-                  <div className="w-full h-64 rounded-2xl overflow-hidden relative shadow-md bg-white">
-                    <img
-                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80"
-                      className="w-full h-full object-cover"
-                      alt="Main Product"
-                    />
-                    <span className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
-                      1/4
-                    </span>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      1
-                    </div>
-                  )}
-                </div>
-
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
-                  <div className="flex justify-between items-start gap-2">
-                    <div>
-                      <h2 className="text-sm font-bold text-slate-900">Studio Wireless Headphones Pro</h2>
-                      <p className="text-[11px] text-slate-500 mt-0.5">รุ่น ANC-900X • Matte Black Edition</p>
-                    </div>
-                    <span className="text-lg font-extrabold text-indigo-600 shrink-0">฿6,990</span>
-                  </div>
-                  <div className="flex items-center space-x-3 mt-3 pt-3 border-t border-slate-100 text-xs">
-                    <div className="flex items-center text-amber-500 font-semibold">
-                      <Star className="w-4 h-4 fill-amber-400 mr-1" />
-                      <span>4.8</span>
-                      <span className="text-slate-400 font-normal ml-1">(124 รีวิว)</span>
-                    </div>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-md">
-                      มีสินค้า (เหลือ 18 ชิ้น)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
-                  <label className="text-xs font-bold text-slate-800 block mb-2">เลือกสีสินค้า (Color)</label>
-                  <div className="flex space-x-3">
-                    <button className="w-9 h-9 rounded-full bg-slate-900 ring-2 ring-indigo-600 ring-offset-2 flex items-center justify-center shadow-sm">
-                      <Check className="w-4 h-4 text-white" />
-                    </button>
-                    <button className="w-9 h-9 rounded-full bg-slate-400 shadow-sm"></button>
-                    <button className="w-9 h-9 rounded-full bg-amber-100 border border-amber-300 shadow-sm"></button>
-                  </div>
-                </div>
-
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm relative">
-                  <span className="text-xs font-bold text-slate-800 block mb-1.5">รายละเอียดสินค้า</span>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">
-                    หูฟังไร้สายระดับพรีเมียมพร้อมเทคโนโลยี Active Noise Cancelling ป้องกันเสียงรบกวนภายนอกได้สูงสุด 98% ให้มิติเสียงคมชัด เบสแน่น
-                  </p>
-                  {showAnnotations && (
-                    <div className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      2
-                    </div>
-                  )}
-                </div>
-
-                <div className="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-3.5 space-y-2">
-                  <span className="text-xs font-bold text-indigo-950 block">จุดเด่นคุณสมบัติ</span>
-                  <div className="grid grid-cols-2 gap-2.5 text-[11px] text-indigo-900">
-                    <div className="flex items-center gap-2">
-                      <Bluetooth className="w-4 h-4 text-indigo-600" />
-                      <span>Bluetooth 5.3</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <BatteryCharging className="w-4 h-4 text-indigo-600" />
-                      <span>แบตเตอรี่ 40 ชั่วโมง</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                      <span>ประกันศูนย์ 2 ปี</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Truck className="w-4 h-4 text-indigo-600" />
-                      <span>จัดส่งฟรีด่วนพิเศษ</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Actions */}
-              <div className="p-4 border-t border-slate-200 bg-white flex items-center gap-3 shrink-0 relative shadow-xl">
-                <button
-                  onClick={() => navigateTo(3)}
-                  className="w-12 h-12 border border-slate-200 rounded-xl flex items-center justify-center bg-slate-50 text-slate-700"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => navigateTo(3)}
-                  className="flex-1 h-12 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md"
-                >
-                  <span>หยิบใส่ตะกร้า</span>
-                  <span>•</span>
-                  <span>฿6,990</span>
-                </button>
-                {showAnnotations && (
-                  <div className="absolute -top-2 right-4 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                    3
-                  </div>
-                )}
-              </div>
-
-              <div className="w-full h-4 bg-white flex justify-center items-center shrink-0">
-                <div className="w-32 h-1 bg-slate-300 rounded-full"></div>
-              </div>
-            </div>
+      <div className="p-4 space-y-4 flex-1">
+        <div className="flex items-center gap-2">
+          <div className="flex-1 flex items-center gap-2 bg-slate-100 px-3 py-2.5 rounded-xl border border-slate-200">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder="ค้นหาสินค้าไอที หูฟัง สมาร์ทวอทช์..." 
+              className="bg-transparent text-xs w-full outline-none text-slate-700" 
+              readOnly 
+            />
           </div>
-        )}
+          <button className="p-2.5 bg-indigo-600 text-white rounded-xl">
+            <Sliders className="w-4 h-4" />
+          </button>
+        </div>
 
-        {/* SCREEN 3: CART & CHECKOUT */}
-        {(activeViewMode === "grid" || activeSingleScreen === 3) && (
-          <div id="screen-container-3" className="flex flex-col items-center">
-            <div className="text-xs text-slate-300 font-medium mb-3 flex items-center gap-2">
-              <span className="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center font-bold text-[11px]">
-                3
-              </span>
-              <span>หน้า 3: ตะกร้า & ชำระเงิน (Cart & Checkout)</span>
-            </div>
+        <div className="relative rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-indigo-600 to-purple-700 text-white p-5">
+          <span className="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block mb-2">
+            SPECIAL OFFER
+          </span>
+          <h2 className="text-lg font-bold leading-tight">โปรโมชันพิเศษลดสูงสุด 50%</h2>
+          <p className="text-[11px] text-indigo-100 mt-1">สินค้าอุปกรณ์ไอทีและแกดเจ็ตยอดนิยมประจำเดือน</p>
+          <button className="mt-3 px-4 py-1.5 bg-white text-indigo-700 rounded-lg text-xs font-bold shadow">
+            ช้อปเลย
+          </button>
+        </div>
 
-            <div className="w-[390px] h-[882px] min-w-[390px] min-h-[882px] bg-slate-50 border-[10px] border-slate-800 rounded-[46px] shadow-2xl relative overflow-hidden flex flex-col text-slate-900">
-              <div className="w-full h-8 bg-slate-950 flex justify-between items-center px-6 pt-1 shrink-0 select-none z-30">
-                <span className="text-[11px] font-semibold text-white font-mono">09:43</span>
-                <div className="w-20 h-4 bg-black rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-slate-800 rounded-full mr-2"></div>
-                  <div className="w-2 h-2 bg-slate-700 rounded-full"></div>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <Wifi className="w-3 h-3 text-white" />
-                  <Battery className="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-
-              <div className="p-3 border-b border-slate-100 bg-white/90 backdrop-blur-md flex justify-between items-center sticky top-0 z-20 shrink-0">
-                <button
-                  onClick={() => navigateTo(2)}
-                  className="w-9 h-9 border border-slate-200 rounded-full flex items-center justify-center bg-white shadow-sm"
-                >
-                  <ArrowLeft className="w-4 h-4 text-slate-700" />
-                </button>
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  ตะกร้าสินค้า (2 รายการ)
-                </span>
-                <button className="text-xs text-rose-500 font-semibold">ลบทั้งหมด</button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
-                {/* Item 1 */}
-                <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex gap-3 relative">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
-                    <img
-                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&auto=format&fit=crop&q=80"
-                      className="w-full h-full object-cover"
-                      alt="Cart item 1"
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900">Studio Headphones Pro</h4>
-                        <p className="text-[10px] text-slate-400">สี: Matte Black</p>
-                      </div>
-                      <button className="text-slate-400 hover:text-rose-500">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-xs font-bold text-indigo-600">฿6,990</span>
-                      <div className="flex items-center border border-slate-200 rounded-lg h-7 bg-slate-50">
-                        <button className="px-2 text-xs font-bold text-slate-500">-</button>
-                        <span className="px-2 text-xs font-bold text-slate-800 border-x border-slate-200">1</span>
-                        <button className="px-2 text-xs font-bold text-slate-500">+</button>
-                      </div>
-                    </div>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute -top-2 -left-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      1
-                    </div>
-                  )}
-                </div>
-
-                {/* Promo */}
-                <div className="relative">
-                  <div className="flex gap-2">
-                    <div className="flex-1 bg-white border border-dashed border-indigo-300 rounded-xl px-3 flex items-center text-xs shadow-sm">
-                      <Ticket className="w-4 h-4 text-indigo-500 mr-2" />
-                      <input
-                        type="text"
-                        defaultValue="PROMO2026"
-                        className="bg-transparent outline-none w-full text-slate-800 font-medium"
-                      />
-                    </div>
-                    <button className="px-4 py-2.5 bg-indigo-50 text-indigo-600 border border-indigo-200 text-xs font-bold rounded-xl">
-                      ใช้งาน
-                    </button>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      2
-                    </div>
-                  )}
-                </div>
-
-                {/* Payment Method */}
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 space-y-2.5 shadow-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-900">ช่องทางการชำระเงิน</span>
-                    <span className="text-[11px] text-indigo-600 font-semibold cursor-pointer">เปลี่ยน</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2.5 bg-indigo-50/50 rounded-xl border border-indigo-100">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-[9px] font-bold">
-                        VISA
-                      </div>
-                      <span className="text-xs text-slate-800 font-medium">•••• •••• •••• 4242</span>
-                    </div>
-                    <CheckCircle2 className="w-4 h-4 text-indigo-600" />
-                  </div>
-                </div>
-
-                {/* Summary */}
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 space-y-2 text-xs shadow-sm relative">
-                  <div className="flex justify-between text-slate-500">
-                    <span>ราคาสินค้าทั้งหมด</span>
-                    <span>฿7,880</span>
-                  </div>
-                  <div className="flex justify-between text-emerald-600">
-                    <span>ส่วนลดคูปอง (PROMO2026)</span>
-                    <span className="font-semibold">-฿500</span>
-                  </div>
-                  <div className="flex justify-between text-slate-500">
-                    <span>ค่าจัดส่ง</span>
-                    <span className="text-emerald-600 font-medium">ฟรี</span>
-                  </div>
-                  <hr className="border-slate-100 my-1" />
-                  <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-1">
-                    <span>ยอดชำระสุทธิ</span>
-                    <span className="text-indigo-600">฿7,380</span>
-                  </div>
-                  {showAnnotations && (
-                    <div className="absolute top-2 -right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      3
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="p-4 border-t border-slate-200 bg-white shrink-0 shadow-lg">
-                <button
-                  onClick={() => navigateTo(4)}
-                  className="w-full h-12 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md"
-                >
-                  <span>ชำระเงิน ฿7,380</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="w-full h-4 bg-white flex justify-center items-center shrink-0">
-                <div className="w-32 h-1 bg-slate-300 rounded-full"></div>
-              </div>
-            </div>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-xs font-bold text-slate-800">หมวดหมู่สินค้า</h3>
+            <span className="text-[11px] text-indigo-600 font-semibold cursor-pointer">ดูทั้งหมด</span>
           </div>
-        )}
-
-        {/* SCREEN 4: SUCCESS */}
-        {(activeViewMode === "grid" || activeSingleScreen === 4) && (
-          <div id="screen-container-4" className="flex flex-col items-center">
-            <div className="text-xs text-slate-300 font-medium mb-3 flex items-center gap-2">
-              <span className="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center font-bold text-[11px]">
-                4
-              </span>
-              <span>หน้า 4: สั่งซื้อสำเร็จ (Order Success)</span>
-            </div>
-
-            <div className="w-[390px] h-[882px] min-w-[390px] min-h-[882px] bg-slate-50 border-[10px] border-slate-800 rounded-[46px] shadow-2xl relative overflow-hidden flex flex-col text-slate-900">
-              <div className="w-full h-8 bg-slate-950 flex justify-between items-center px-6 pt-1 shrink-0 select-none z-30">
-                <span className="text-[11px] font-semibold text-white font-mono">09:44</span>
-                <div className="w-20 h-4 bg-black rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-slate-800 rounded-full mr-2"></div>
-                  <div className="w-2 h-2 bg-slate-700 rounded-full"></div>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <Wifi className="w-3 h-3 text-white" />
-                  <Battery className="w-3.5 h-3.5 text-white" />
-                </div>
+          <div className="grid grid-cols-4 gap-2">
+            {[
+              { label: "หูฟัง", icon: "🎧" },
+              { label: "นาฬิกา", icon: "⌚" },
+              { label: "เครื่องเสียง", icon: "🔊" },
+              { label: "แกดเจ็ต", icon: "📱" },
+            ].map((cat, idx) => (
+              <div key={idx} className="bg-white border border-slate-100 p-2.5 rounded-xl flex flex-col items-center gap-1 shadow-sm">
+                <span className="text-xl">{cat.icon}</span>
+                <span className="text-[10px] font-medium text-slate-600">{cat.label}</span>
               </div>
+            ))}
+          </div>
+        </div>
 
-              <div className="flex-1 overflow-y-auto p-6 flex flex-col justify-between bg-slate-50 text-center">
-                <div className="pt-4 space-y-3">
-                  <div className="relative inline-block">
-                    <div className="w-20 h-20 rounded-full bg-emerald-100 border-4 border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-600 shadow-inner">
-                      <Check className="w-10 h-10 stroke-[3]" />
-                    </div>
-                    {showAnnotations && (
-                      <div className="absolute top-0 right-0 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                        1
-                      </div>
-                    )}
-                  </div>
-
+        <div>
+          <h3 className="text-xs font-bold text-slate-800 mb-3">สินค้ายอดนิยม</h3>
+          <div className="space-y-3">
+            {PRODUCTS.map((product) => (
+              <div 
+                key={product.id}
+                onClick={() => onSelectProduct(product)}
+                className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex gap-3 cursor-pointer hover:border-indigo-200 transition"
+              >
+                <img src={product.image} alt={product.name} className="w-20 h-20 rounded-xl object-cover" />
+                <div className="flex-1 flex flex-col justify-between">
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900">สั่งซื้อสินค้าเรียบร้อยแล้ว!</h2>
-                    <p className="text-xs text-slate-500 mt-1">
-                      ขอบคุณสำหรับการสั่งซื้อ เราได้ส่งใบเสร็จไปทางอีเมลของคุณแล้ว
-                    </p>
-                  </div>
-
-                  <div className="inline-block bg-white border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs text-slate-800 font-mono shadow-sm">
-                    หมายเลขคำสั่งซื้อ: <span className="font-bold text-indigo-600">#ORD-99824-TH</span>
-                  </div>
-                </div>
-
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-4 text-left shadow-sm relative">
-                  <span className="text-xs font-bold text-slate-900 block mb-3">สถานะการจัดส่งพัสดุ</span>
-                  <div className="space-y-4 text-xs relative pl-4 border-l-2 border-indigo-100">
-                    <div className="relative">
-                      <div className="absolute -left-[21px] top-0.5 w-3.5 h-3.5 rounded-full bg-indigo-600 ring-4 ring-indigo-50"></div>
-                      <span className="font-bold text-slate-900 block text-[11px]">ชำระเงินสำเร็จ</span>
-                      <span className="text-[10px] text-slate-400">วันนี้, 09:44 น.</span>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute -left-[21px] top-0.5 w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-50"></div>
-                      <span className="font-bold text-slate-900 block text-[11px]">กำลังเตรียมจัดส่งสินค้า</span>
-                      <span className="text-[10px] text-slate-500">คาดว่าแล้วเสร็จ 14:00 น.</span>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute -left-[21px] top-0.5 w-3.5 h-3.5 rounded-full bg-slate-200"></div>
-                      <span className="font-bold text-slate-400 block text-[11px]">บริษัทขนส่งเข้ารับพัสดุ</span>
-                      <span className="text-[10px] text-slate-400">คาดว่าจะได้รับวันพรุ่งนี้</span>
+                    <span className="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                      {product.category}
+                    </span>
+                    <h4 className="text-xs font-bold text-slate-800 mt-1 line-clamp-1">{product.name}</h4>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      <span className="text-[10px] font-bold text-slate-700">{product.rating}</span>
+                      <span className="text-[9px] text-slate-400">({product.reviews})</span>
                     </div>
                   </div>
-                  {showAnnotations && (
-                    <div className="absolute -top-2 -right-2 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      2
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <span className="text-xs font-extrabold text-indigo-600">฿{product.price.toLocaleString()}</span>
+                      <span className="text-[10px] text-slate-400 line-through ml-1.5">฿{product.originalPrice.toLocaleString()}</span>
                     </div>
-                  )}
-                </div>
-
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-3 text-left text-xs space-y-1 shadow-sm">
-                  <div className="flex justify-between text-slate-400 text-[10px]">
-                    <span>รายการสินค้า: 2 ชิ้น</span>
-                    <span>จ่ายผ่าน VISA •••• 4242</span>
+                    <span className="text-[10px] bg-indigo-600 text-white px-2 py-1 rounded-lg font-bold">เลือก</span>
                   </div>
-                  <div className="flex justify-between font-bold text-slate-900">
-                    <span>ราคารวมทั้งสิ้น:</span>
-                    <span className="text-indigo-600">฿7,380</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2 relative">
-                  <button
-                    onClick={() => navigateTo(1)}
-                    className="w-full h-11 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md"
-                  >
-                    <Truck className="w-4 h-4" />
-                    <span>ติดตามสถานะพัสดุ</span>
-                  </button>
-                  <button
-                    onClick={() => navigateTo(1)}
-                    className="w-full h-11 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <Home className="w-4 h-4" />
-                    <span>กลับสู่หน้าแรก</span>
-                  </button>
-                  {showAnnotations && (
-                    <div className="absolute -top-1 -right-1 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white z-40">
-                      3
-                    </div>
-                  )}
                 </div>
               </div>
-
-              <div className="w-full h-4 bg-white flex justify-center items-center shrink-0">
-                <div className="w-32 h-1 bg-slate-300 rounded-full"></div>
-              </div>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
+      </div>
+
+      <div className="bg-white border-t border-slate-100 p-3 flex justify-around items-center">
+        <div className="flex flex-col items-center text-indigo-600">
+          <Home className="w-5 h-5" />
+          <span className="text-[9px] font-bold mt-0.5">หน้าแรก</span>
+        </div>
+        <div className="flex flex-col items-center text-slate-400">
+          <Grid className="w-5 h-5" />
+          <span className="text-[9px] font-medium mt-0.5">หมวดหมู่</span>
+        </div>
+        <div className="flex flex-col items-center text-slate-400">
+          <ShoppingCart className="w-5 h-5" />
+          <span className="text-[9px] font-medium mt-0.5">ตะกร้า</span>
+        </div>
+        <div className="flex flex-col items-center text-slate-400">
+          <User className="w-5 h-5" />
+          <span className="text-[9px] font-medium mt-0.5">บัญชี</span>
+        </div>
       </div>
     </div>
-  </main>
-</div>
+  );
+}
 
+// SCREEN 2: PRODUCT DETAIL
+function ScreenDetail({ product, onAddToCart }: { product: typeof PRODUCTS[0]; onAddToCart: () => void }) {
+  return (
+    <div className="flex-1 flex flex-col">
+      <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+        <button className="p-1.5 bg-slate-100 rounded-full text-slate-600">
+          <ArrowLeft className="w-4 h-4" />
+        </button>
+        <span className="text-xs font-bold text-slate-700">รายละเอียดสินค้า</span>
+        <button className="p-1.5 bg-slate-100 rounded-full text-rose-500">
+          <Heart className="w-4 h-4 fill-rose-500" />
+        </button>
+      </div>
 
-);
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="relative rounded-2xl overflow-hidden shadow-md h-56 bg-slate-100">
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          <span className="absolute top-3 left-3 bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+            ลดราคา 40%
+          </span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 space-y-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                {product.category}
+              </span>
+              <h2 className="text-sm font-bold text-slate-900 mt-1">{product.name}</h2>
+            </div>
+            <div className="text-right">
+              <p className="text-base font-extrabold text-indigo-600">฿{product.price.toLocaleString()}</p>
+              <p className="text-xs text-slate-400 line-through">฿{product.originalPrice.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+              <span className="font-bold">{product.rating}</span>
+            </div>
+            <span className="text-slate-300">•</span>
+            <span className="text-slate-500">{product.reviews} รีวิวจากผู้ใช้จริง</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100">
+          <h3 className="text-xs font-bold text-slate-800 mb-2">เลือกตัวเลือกสี</h3>
+          <div className="flex gap-3">
+            {product.colors.map((c, i) => (
+              <div 
+                key={i} 
+                style={{ backgroundColor: c }} 
+                className={`w-7 h-7 rounded-full cursor-pointer border-2 ${i === 0 ? "border-indigo-600 ring-2 ring-indigo-200" : "border-white shadow"}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 space-y-2">
+          <h3 className="text-xs font-bold text-slate-800">รายละเอียดและคุณสมบัติ</h3>
+          <p className="text-xs text-slate-600 leading-relaxed">{product.description}</p>
+          <div className="pt-2 space-y-1 text-xs text-slate-500">
+            <div className="flex items-center gap-2">
+              <Truck className="w-3.5 h-3.5 text-indigo-600" />
+              <span>จัดส่งฟรีทั่วประเทศ เมื่อซื้อครบ 500 บาท</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>รับประกันสินค้าศูนย์ไทย 1 ปีเต็ม</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 bg-white border-t border-slate-100 flex gap-3">
+        <button className="p-3 border border-indigo-600 text-indigo-600 rounded-xl font-bold">
+          <ShoppingCart className="w-5 h-5" />
+        </button>
+        <button 
+          onClick={onAddToCart}
+          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-500/20"
+        >
+          ซื้อทันที
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// SCREEN 3: CART & CHECKOUT
+function ScreenCart({ product, count, setCount, onCheckout }: { product: typeof PRODUCTS[0]; count: number; setCount: any; onCheckout: () => void }) {
+  const subtotal = product.price * count;
+  const shipping = 50;
+  const discount = 100;
+  const total = subtotal + shipping - discount;
+
+  return (
+    <div className="flex-1 flex flex-col">
+      <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+        <button className="p-1.5 bg-slate-100 rounded-full text-slate-600">
+          <ArrowLeft className="w-4 h-4" />
+        </button>
+        <span className="text-xs font-bold text-slate-700">ตะกร้าสินค้า & ชำระเงิน</span>
+        <span className="text-xs text-indigo-600 font-semibold">{count} รายการ</span>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex gap-3">
+          <img src={product.image} alt={product.name} className="w-16 h-16 rounded-xl object-cover" />
+          <div className="flex-1 flex flex-col justify-between">
+            <div className="flex justify-between">
+              <h4 className="text-xs font-bold text-slate-800 line-clamp-1">{product.name}</h4>
+            </div>
+            <p className="text-xs font-bold text-indigo-600">฿{product.price.toLocaleString()}</p>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setCount(Math.max(1, count - 1))}
+                className="w-5 h-5 bg-slate-100 rounded flex items-center justify-center text-xs text-slate-700 font-bold"
+              >
+                -
+              </button>
+              <span className="text-xs font-bold text-slate-800">{count}</span>
+              <button 
+                onClick={() => setCount(count + 1)}
+                className="w-5 h-5 bg-slate-100 rounded flex items-center justify-center text-xs text-slate-700 font-bold"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-100 space-y-1.5">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-800">ที่อยู่ในการจัดส่ง</span>
+            <span className="text-[10px] text-indigo-600 font-semibold">เปลี่ยน</span>
+          </div>
+          <p className="text-xs text-slate-700 font-medium">คุณสมชาย ใจดี (+66 81 234 5678)</p>
+          <p className="text-[11px] text-slate-500">99/123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-100 space-y-2">
+          <span className="text-xs font-bold text-slate-800">วิธีการชำระเงิน</span>
+          <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <div className="flex items-center gap-2.5">
+              <CreditCard className="w-5 h-5 text-indigo-600" />
+              <div>
+                <p className="text-xs font-bold text-slate-800">บัตรเครดิต / เดบิต</p>
+                <p className="text-[10px] text-slate-400">VISA •••• 4242</p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-100 space-y-2">
+          <h4 className="text-xs font-bold text-slate-800 mb-1">สรุปยอดชำระเงิน</h4>
+          <div className="flex justify-between text-xs text-slate-600">
+            <span>รวมราคาสินค้า</span>
+            <span>฿{subtotal.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between text-xs text-slate-600">
+            <span>ค่าจัดส่ง</span>
+            <span>฿{shipping}</span>
+          </div>
+          <div className="flex justify-between text-xs text-emerald-600">
+            <span>ส่วนลดคูปอง</span>
+            <span>-฿{discount}</span>
+          </div>
+          <div className="pt-2 border-t border-slate-100 flex justify-between text-sm font-bold text-slate-900">
+            <span>ยอดชำระสุทธิ</span>
+            <span className="text-indigo-600">฿{total.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 bg-white border-t border-slate-100">
+        <button 
+          onClick={onCheckout}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2"
+        >
+          <span>ยืนยันชำระเงิน ฿{total.toLocaleString()}</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// SCREEN 4: SUCCESS
+function ScreenSuccess({ onBackHome }: { onBackHome: () => void }) {
+  return (
+    <div className="flex-1 flex flex-col justify-between p-6 bg-white text-center">
+      <div className="pt-8 flex flex-col items-center">
+        <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-600">
+          <CheckCircle className="w-12 h-12" />
+        </div>
+        <h2 className="text-lg font-bold text-slate-900">สั่งซื้อสำเร็จ!</h2>
+        <p className="text-xs text-slate-500 mt-1">หมายเลขคำสั่งซื้อ #ORD-2026-8892</p>
+
+        <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 mt-6 space-y-3 text-left">
+          <div className="flex justify-between items-center text-xs pb-2 border-b border-slate-200">
+            <span className="text-slate-500">สถานะ</span>
+            <span className="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">กำลังเตรียมจัดส่ง</span>
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-500">คาดว่าจะได้รับ</span>
+            <span className="font-bold text-slate-800">14 พ.ย. 2026</span>
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-500">ช่องทางชำระ</span>
+            <span className="font-bold text-slate-800">Visa ending in 4242</span>
+          </div>
+        </div>
+
+        <div className="w-full mt-6 text-left space-y-3">
+          <h4 className="text-xs font-bold text-slate-800">ติดตามสถานะ</h4>
+          <div className="space-y-3 pl-2 border-l-2 border-indigo-600">
+            <div className="relative pl-4">
+              <div className="absolute -left-[13px] top-0 w-3.5 h-3.5 rounded-full bg-indigo-600 ring-4 ring-indigo-100"></div>
+              <p className="text-xs font-bold text-slate-800">ยืนยันคำสั่งซื้อเรียบร้อย</p>
+              <p className="text-[10px] text-slate-400">11 พ.ย. 2026 - 11:30 น.</p>
+            </div>
+            <div className="relative pl-4">
+              <div className="absolute -left-[13px] top-0 w-3.5 h-3.5 rounded-full bg-slate-300"></div>
+              <p className="text-xs font-semibold text-slate-500">กำลังจัดเตรียมสินค้า</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2 pb-4">
+        <button 
+          onClick={onBackHome}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-indigo-500/20"
+        >
+          กลับสู่หน้าแรก
+        </button>
+      </div>
+    </div>
+  );
 }
