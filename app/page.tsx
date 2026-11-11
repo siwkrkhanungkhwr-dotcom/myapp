@@ -1,4 +1,63 @@
-{/* Controls */}
+"use client";
+
+import React, { useState } from "react";
+import {
+Search,
+Bell,
+ChevronDown,
+SlidersHorizontal,
+Headphones,
+Watch,
+Speaker,
+Laptop,
+Star,
+Home,
+Compass,
+ShoppingBag,
+User,
+ArrowLeft,
+Share2,
+Heart,
+Check,
+Bluetooth,
+BatteryCharging,
+ShieldCheck,
+Truck,
+Trash2,
+Ticket,
+CheckCircle2,
+ArrowRight,
+Wifi,
+Battery,
+Grid,
+Smartphone,
+Info,
+} from "lucide-react";
+
+export default function AppPrototypePage() {
+const [activeViewMode, setActiveViewMode] = useState<"grid" | "single">("grid");
+const [activeSingleScreen, setActiveSingleScreen] = useState(1);
+const [showAnnotations, setShowAnnotations] = useState(true);
+const [zoomLevel, setZoomLevel] = useState(1);
+
+const navigateTo = (screenNum: number) => {
+if (activeViewMode === "single") {
+setActiveSingleScreen(screenNum);
+} else {
+const target = document.getElementById(screen-container-${screenNum});
+if (target) {
+target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+}
+}
+};
+
+const handleZoom = (delta: number) => {
+setZoomLevel((prev) => Math.min(Math.max(0.5, prev + delta), 1.4));
+};
+
+return (
+
+
     <div className="flex items-center space-x-3 mt-3 sm:mt-0">
       <div className="bg-slate-800 border border-slate-700 rounded-xl p-1 flex items-center text-xs">
         <button
@@ -747,3 +806,7 @@
     </div>
   </main>
 </div>
+
+
+);
+}
